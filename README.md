@@ -1,54 +1,51 @@
-# Construction_delay
+# Construction Delay Prediction
 
-#code
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_absolute_error
-import joblib
+## Overview
+This project predicts **construction delays** using a **Random Forest Regressor**. Users can input project details via a **Streamlit web app**, and the trained model will estimate the expected completion time.
 
-# Load dataset
-df = pd.read_csv("construction_delay_data.csv")
+## Features
+- **Trains a Random Forest model** to predict construction delays.
+- **Encodes categorical features** using Label Encoding.
+- **Deploys a web interface** with Streamlit for easy input and predictions.
+- **Saves & loads trained models** for future predictions.
 
-# Display first few rows
-print("Dataset Sample:\n", df.head())
+## Dependencies
+Ensure you have the following installed:
 
-# Encode categorical variables using Label Encoding
-categorical_columns = [
-    "Project_Size", "Weather_Conditions", "Labor_Availability",
-    "Material_Availability", "Site_Conditions", "Government_Approvals",
-    "Budget_Issues", "Equipment_Availability"
-]
+```bash
+pip install pandas numpy scikit-learn streamlit pickle-mixin
+```
 
-# Apply Label Encoding
-label_encoders = {}
-for col in categorical_columns:
-    le = LabelEncoder()
-    df[col] = le.fit_transform(df[col])
-    label_encoders[col] = le  # Save encoders for future use
+## How to Run
+### 1. Train the Model
+```bash
+python train_model.py
+```
+- Loads `modified_construction_delay_data.csv`.
+- Encodes categorical variables.
+- Trains a **Random Forest Regressor**.
+- Saves the model as `model.pkl` and encoders as `label_encoders.pkl`.
 
-# Split dataset into features and target variable
-X = df.drop(columns=["Actual_Completion_Days"])
-y = df["Actual_Completion_Days"]
+### 2. Run the Web App
+```bash
+streamlit run app.py
+```
+- Loads the trained model and label encoders.
+- Provides a user-friendly interface to enter project details.
+- Predicts the expected **completion time** in days.
 
-# Split data into training and testing sets (80% train, 20% test)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+## Dataset Requirements
+The dataset should include:
+- **Categorical features** (e.g., Project Size, Weather Conditions, Labor Availability, etc.).
+- **Target variable**: `Actual_Completion_Days` (numeric value).
 
-# Initialize and train Random Forest Regressor
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+## Expected Output
+- **Model Evaluation**: The training script prints **Mean Absolute Error (MAE)**.
+- **Prediction UI**: The app outputs the estimated project completion time based on user inputs.
 
-# Predict on test data
-y_pred = model.predict(X_test)
+## Notes
+- Ensure `modified_construction_delay_data.csv` is in the correct location before training.
+- Modify hyperparameters in `train_model.py` to improve performance.
 
-# Evaluate model
-mae = mean_absolute_error(y_test, y_pred)
-print(f"Mean Absolute Error: {mae:.2f} days")
 
-# Save trained model and label encoders
-joblib.dump(model, "construction_delay_model.pkl")
-joblib.dump(label_encoders, "label_encoders.pkl")
 
-print("Model and encoders saved successfully!")
