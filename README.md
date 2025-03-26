@@ -43,6 +43,9 @@ The dataset should include:
 - **Model Evaluation**: The training script prints **Mean Absolute Error (MAE)**.
 - **Prediction UI**: The app outputs the estimated project completion time based on user inputs.
 
+- ![Screenshot 2025-03-23 045425](https://github.com/user-attachments/assets/216e4caf-1051-474a-8b2b-c7146a16d5f3)
+
+
 ## Notes
 - Ensure `modified_construction_delay_data.csv` is in the correct location before training.
 - Modify hyperparameters in `train_model.py` to improve performance.
